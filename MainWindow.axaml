@@ -1,0 +1,211 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        Width="950" Height="700"
+        x:Class="GameOfLife.MainWindow"
+        Title="GameOfLife">
+    
+    
+    <Grid ColumnDefinitions="Auto,*">
+
+        <StackPanel Grid.Column="0" Width="250" Background="#EAEAEA">
+
+            <Border Width="230"
+                    BorderBrush="Gray"
+                    BorderThickness="1"
+                    CornerRadius="4"
+                    HorizontalAlignment="Center"
+                    Margin="0,10,0,10">
+                <StackPanel>
+                    <Label Content="Controls" FontWeight="Bold" Margin="4"/>
+                    <Button Content="Random"
+                            Width="200"
+                            Margin="4"
+                            Background="#B0C4DE"
+                            Foreground="#2C3E50"
+                            HorizontalContentAlignment="Center"
+                            HorizontalAlignment="Center"
+                            VerticalContentAlignment="Center"
+                            Click="Random_OnClick"/>
+                    <Button Content="Draw"
+                            Width="200"
+                            Margin="4"
+                            Background="#B0C4DE"
+                            Foreground="#2C3E50"
+                            HorizontalContentAlignment="Center"
+                            HorizontalAlignment="Center"
+                            VerticalContentAlignment="Center"
+                            Click="Draw_OnClick"/>
+                    <Button Content="Clear"
+                            Width="200"
+                            Margin="4"
+                            Background="#B0C4DE"
+                            Foreground="#2C3E50"
+                            HorizontalContentAlignment="Center"
+                            HorizontalAlignment="Center"
+                            VerticalContentAlignment="Center"
+                            Click="Clear_OnClick"/>
+                </StackPanel>
+            </Border>
+
+            <Border Width="230" BorderBrush="Gray" BorderThickness="1" CornerRadius="4" Margin="0,0,0,10">
+
+                <StackPanel>
+
+                    <Label  Content="Grid Size" FontWeight="Bold" Margin="4"/>
+                    
+                    <StackPanel Orientation="Horizontal">
+
+                        <Slider Minimum="10" Maximum="100" 
+                                Value="70"
+                                IsSnapToTickEnabled="True" 
+                                TickFrequency="1" 
+                                Width="165" 
+                                Background="#D3D3D3"
+                                Name="SliderSize" 
+                                Margin="15,0,0,0"
+                                ValueChanged="UpdateGameSize">
+                            
+                        </Slider>
+                        
+                        <TextBlock Name="txtSize" 
+                                 Width="30"
+                                 Height="30"
+                                 Text="{Binding ElementName=SliderSize, Path=Value}" 
+                                 FontSize="10"
+                                 Background="#EDEDED"
+                                 Foreground="#2C3E50"
+                                 Margin="0,0,3,0" />
+                        
+                        
+                    </StackPanel>     
+                </StackPanel>
+            
+            </Border>
+
+            <Border Width="230" BorderBrush="Gray" BorderThickness="1" CornerRadius="4" Margin="0,0,0,10">
+                <StackPanel>
+
+                    <Label Content="Iteration Speed" FontWeight="Bold" Margin="4"/>
+                    <StackPanel Orientation="Horizontal">
+                        
+                        <Slider Minimum="1" Maximum="1000" 
+                                Value="125"
+                                IsSnapToTickEnabled="True" 
+                                TickFrequency="1" 
+                                Width="165" 
+                                Background="#D3D3D3"
+                                Name="SliderSpeed" 
+                                Margin="15,0,0,0">
+                            
+                        </Slider>
+                        
+                        <TextBlock Name="txtSpeed" 
+                                 Width="30"
+                                 Height="30"
+                                 Text="{Binding ElementName=SliderSpeed, Path=Value}" 
+                                 FontSize="10"
+                                 Background="#EDEDED"
+                                 Foreground="#2C3E50"
+                                 Margin="0,0,3,0" />
+                    </StackPanel>
+                </StackPanel>
+
+            </Border>
+
+            <Border Width="230" BorderBrush="Gray" BorderThickness="1" CornerRadius="4" Margin="0,0,0,10">
+                <StackPanel>
+
+                    <Label Content="Population density" FontWeight="Bold" Margin="4"/>
+                    <StackPanel Orientation="Horizontal">
+                        
+                        <Slider Minimum="0" Maximum="100" 
+                                Value="70" 
+                                IsSnapToTickEnabled="True"  
+                                TickFrequency="1" 
+                                Width="165" 
+                                Background="#D3D3D3"
+                                Name="SliderPopulation" 
+                                Margin="15,0,0,0">
+                            
+                        </Slider>
+                        
+                        <TextBlock Name="txtPopulation" 
+                                 Width="30"
+                                 Height="30"
+                                 Text="{Binding ElementName=SliderPopulation, Path=Value}" 
+                                 FontSize="10"
+                                 Background="#EDEDED" 
+                                 Margin="0,0,3,0" />
+                    </StackPanel>
+                </StackPanel>
+
+            </Border>
+
+        </StackPanel>
+
+        <Grid Name="MainGrid"
+              Width="700"
+              Height="700"
+              Grid.Column="1"         
+              Background="White">
+            <Label Grid.Row="6"
+                Name="statusMessage"
+                FontSize="13"
+                Margin="10,40,0,5"
+                Foreground="Red"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                Content=""/>  
+            </Grid>
+
+        <!-- This Canvas is for overlaying UI elements on MainGrid -->
+        <Canvas Name="Canvas"
+                Grid.Column="1"
+                Width="30"
+                Background="#00FFFFFF"
+                HorizontalAlignment="Right">
+            
+            <ToggleButton Name="PauseButton"
+                          Canvas.Right="10"
+                          Canvas.Top="10"
+                          Width="30"
+                          Height="30"
+                          Background="#B0C4DE"
+                          Foreground="#2C3E50"
+                          HorizontalAlignment="Center"
+                          VerticalAlignment="Center"
+                          Checked="Run_Checked"
+                          Unchecked="Run_Unchecked">
+                <ToggleButton.Content>
+                    <TextBlock Text = "▶" />
+                </ToggleButton.Content>
+            </ToggleButton>
+
+            <Button Canvas.Right="10"
+                    Canvas.Top="45"
+                    Width="30"
+                    Height="30"
+                    Background="#B0C4DE"
+                    Foreground="#2C3E50"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    Click="NextGeneration_OnClick">
+                >
+            </Button>
+
+            <TextBlock Name="txtGeneration"
+                       Canvas.Right="0"
+                       Canvas.Bottom="0"
+                       Text="   "
+                       Background="White"
+                       FontSize="15"
+                       TextAlignment="Center"
+                       Opacity="0.75"/>
+
+        </Canvas>
+
+    </Grid>
+</Window>
