@@ -6,6 +6,8 @@ the Avalonia framework with .NET and C#
 1. Download and install the .NET SDK from the official [Microsoft .NET Website](https://dotnet.microsoft.com/en-us/download)
 2. Install an IDE, like Visual Studio, Visual Studio Code or JetBrains Rider
 3. Install Avalonia Templates
-   > dotnet new install Avalonia.Templates
+   ```
+   dotnet new install Avalonia.Templates
+   ```
 4. Open and run the project in the IDE
    
